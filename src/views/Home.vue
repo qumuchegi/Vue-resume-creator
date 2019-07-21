@@ -10,12 +10,26 @@
       </div>
       <div>
         <div v-if="username" id="user-avatar">
-          <img v-if="userAvatarBase64" :src="userAvatarBase64" />
-          <i v-if="!userAvatarBase64" class="fab fa-github-alt fa-3x"></i>
+          <Dropdown trigger='click' transfer>
+            <a href="javascript:void(0)">
+              <img v-if="userAvatarBase64" :src="userAvatarBase64" />
+              <i v-if="!userAvatarBase64" class="fab fa-github-alt fa-2x"></i>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem>
+                <div @click="toMyPage">
+                  我的主页
+                </div>
+              </DropdownItem>
+              <DropdownItem> 
+                <div @click="logout">
+                    <div  id='logout-botton'><span>退登</span><i class="fas fa-sign-out-alt"></i></div>
+                </div>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
           <div id='username'>{{username}}</div>
-          <div @click="logout">
-            <div  id='logout-botton'><span>退登</span><i class="fas fa-sign-out-alt"></i></div>
-          </div>
+          
         </div>
         <div v-else id='links'>
           <router-link to="/register">
@@ -125,6 +139,10 @@ export default {
     onSelecMenuItem (name) {
       console.log(name)
       this.selectMenuItemName = name
+    },
+
+    toMyPage () {
+      this.$router.push('/my')
     }
   },
 }

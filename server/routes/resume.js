@@ -1,11 +1,15 @@
 /* eslint-disable no-console */
 const mongoose = require('mongoose')
 const router = require('express').Router()
+const async = require('async')
  
 const {getModel} = require('../db')
 const ResumeModel = getModel('resume')
+const UserModel = getModel('user')
 const uploadFile = require('../middleweres/multer')
 const saveNewResume = require('../middleweres/saveNewResume')
+const OAuth = require('../middleweres/OAuth')
+const JWT_auth = require('../middleweres/jwtAuth')
 
 router.post('/', saveNewResume, (req, res )=>{
     const resData = req.resData
@@ -44,6 +48,41 @@ router.get('/', async (req, res, next) => {
         
 })
  
+router.get('/myresumes', OAuth,JWT_auth, (req,res) => {
+    const username = req.username
+    let userID
+
+    async.series(
+        [ getUserID, getResumes ],
+        (err, result) => {
+            res.json({code:0, data: result[1]})
+        }
+    )
+
+    function getUserID (cb) {
+        UserModel
+        .findOne({name: username})
+        .exec((err,user) => {
+            if(user) {
+                userID = user._id
+                cb(null, userID)
+            }
+        })
+    }
+
+    function getResumes (cb) {
+        ResumeModel
+        .find({authorID: userID})
+        .exec((err, resumes) => {
+            if(resumes) {
+               
+                cb(null, resumes)
+            }
+        })
+    }
+    
+
+})
 router.post('/pubnewresume', saveNewResume, (req, res )=>{
     const resData = req.resData
     res.json(resData)

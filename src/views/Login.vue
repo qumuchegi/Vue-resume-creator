@@ -56,6 +56,7 @@ export default {
             )
             if ( res.code === 0) {
                 console.log(res.msg)
+                cookie.setItem('auth_token', res.user.JWT_token)
                 cookie.setItem('userID', res.user._id.replace('j:\"','').replace('\"',''))
                 cookie.setItem('userAvatar', 'http://localhost:3001/' + res.user.avatarSrc.replace('server/assets/user-avatar/', ''))
                 cookie.setItem('username', res.user.name)

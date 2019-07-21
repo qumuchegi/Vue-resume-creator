@@ -1,6 +1,17 @@
 # vue-resume-creator
 使用 Vue 制作的简历生成器
 
+## 亮点
+
+1. 后端结合使用 OAuth2.0 和 JWT 授权，OAuth 和 JWT_auth 是两个中间件，分别对 OAuth2.0 和 JWT 签发的 token 验证，其中 OAuth 验证成功就跳过 JWT_auth，失败则交给 JWT_auth 来验证：
+
+```javascript
+router.get('/myresumes', OAuth, JWT_auth, (req,res) =>{})
+```
+2. 前端使用 Vue + vue router + vuex；
+
+3. 前端使用了一些 html 和图片、pdf 之间转换的库，对 HTML 的 Blob 、File API有了更深的理解。
+
 ## 开发
 
 `npm run serve` 开启 Vue 前端构建服务

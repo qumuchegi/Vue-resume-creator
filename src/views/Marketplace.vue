@@ -19,7 +19,7 @@
               <span @click="viewHtml(resume._id)" v-if="viewMDID == resume._id">看渲染结果</span>
               <span @click="like(resume._id)">
                 <i :class="likeResumeID.some(e => e == resume._id) || resume.likeNum.some(ev=>ev.userID == userID ) ? 'fas fa-heart like':'fas fa-heart'"></i>
-                <span>{{resume.likeNum.length}}</span>
+                <span>{{ likeResumeID.some(e=>e===resume._id) ? resume.likeNum.length + 1 : resume.likeNum.length}}</span>
               </span>
             </div>
           </div>

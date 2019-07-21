@@ -2,11 +2,15 @@
 const mongoose = require('mongoose')
 const router = require('express').Router()
 const axios = require('axios')
+const JWT = require('jsonwebtoken')
 
 const {getModel} = require('../db')
 const UserModel = getModel('user')
 const uploadFile = require('../middleweres/multer')
 const OAuth_config = require('../config').OAuth
+const JWT_config = require('../config').JWT_config
+const algorithm = JWT_config.algorithm
+const secret = JWT_config.secret
 
 router.post( 
     '/register', 
@@ -36,7 +40,6 @@ router.post(
 
 router.get( // 使用 github 账号登录（不用注册）
     '/gitlogin',
-
     async (req,res)=>{
         var code = req.query.code; // GitHub 回调传回 code 授权码
         console.log(code)
@@ -96,8 +99,18 @@ router.post( // 使用注册的密码登录
             if (!err) {
                 if (user.password === password) {
                     console.log(user)
-                    
-                    res.json({code: 0,user, msg: '使用密码登录成功'})
+                    let JWT_token = JWT.sign(
+                        {username: user.name, exp:Date.now() + 1000 * 60},// payload
+                        secret,
+                        { algorithm }
+                    )
+                    let userInfo = {
+                        JWT_token,
+                        _id: user._id,
+                        avatarSrc: user.avatarSrc,
+                        name: user.name
+                    }
+                    res.json({code: 0,user: userInfo, msg: '使用密码登录成功'})
                 } else {
                     res.json({code: 1, msg: '密码错误'})
                 }

@@ -336,7 +336,6 @@ export default {
             }, () => 
             { 
                 this.isLoadingResumeToPDF = false
-                console.log('finish!');
             })
         },
 
@@ -407,9 +406,7 @@ export default {
                 headers: { 'Content-Type': 'multipart/form-data'},
                 onUploadProgress: (e) => {
                     if (e.lengthComputable) {
-                       
                         this.uploadImgProgress = e.loaded / e.total
-                        console.log(this.uploadImgProgress)
                     }
                 }
             }
@@ -430,11 +427,7 @@ export default {
                     
                     alert('图片已在剪贴板，请在编辑区任意位置直接粘贴图片即可')
                 },1000)
-
-                
-                
             }
-        
         },
 
         copyImgWillInstered () {
@@ -565,9 +558,9 @@ input#color-picker,input#insert-image{
     z-index: -2;
     transition: transform 1s , z-index 1s
 }
-.show-table-size-control,.show-insert-icon-container{
+.show-table-size-control{
     transform: translateY( 0 );
-    z-index: 0;
+    z-index: 1;
     transition: transform 1s, z-index 1s
 }
 .hide-insert-icon-container{
@@ -579,6 +572,9 @@ input#color-picker,input#insert-image{
     color:rgb(69, 175, 20);
 }
 .show-insert-icon-container{
+    transform: translateY( 0 );
+    z-index: 0;
+    transition: transform 1s, z-index 1s;
     background-color: white;
     display: flex;
     justify-content: flex-start;
