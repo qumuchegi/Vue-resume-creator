@@ -18,5 +18,5 @@
 
 3. 简历市场，可以发现其他人上传的简历并点赞收藏：
 
-<img src="./imgs/login.png" width="500px"/>
+<img src="./imgs/market.png" width="500px"/>
 
