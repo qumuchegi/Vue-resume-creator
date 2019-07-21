@@ -1,0 +1,63 @@
+{
+  "name": "resume-creator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "server": "nodemon ./server/app"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "core-js": "^2.6.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "html2canvas": "^1.0.0-rc.3",
+    "iview": "^3.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "less-loader": "^5.0.0",
+    "markdown-it": "^9.0.1",
+    "mongoose": "^5.6.4",
+    "multer": "^1.4.1",
+    "path": "^0.12.7",
+    "querystring": "^0.2.0",
+    "simple-html2pdf": "^1.2.2",
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.3",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.9.0",
+    "@vue/cli-plugin-eslint": "^3.9.0",
+    "@vue/cli-service": "^3.9.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "nodemon": "^1.19.1",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
