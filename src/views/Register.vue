@@ -64,9 +64,9 @@ export default {
                 {headers: { 'Content-Type': 'multipart/form-data' }}
                 )
                 if ( res.code === 1) {
-                    console.log( res.msg )
+                    alert( res.msg )
                 } else {
-                    console.log( '注册成功' )
+                    alert( '注册成功' )
                 }
            }
         },

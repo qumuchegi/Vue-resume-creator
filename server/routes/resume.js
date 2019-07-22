@@ -73,6 +73,7 @@ router.get('/myresumes', OAuth,JWT_auth, (req,res) => {
     function getResumes (cb) {
         ResumeModel
         .find({authorID: userID})
+        .populate('authorID')
         .exec((err, resumes) => {
             if(resumes) {
                
@@ -89,10 +90,13 @@ router.post('/pubnewresume', saveNewResume, (req, res )=>{
   }
 )
 
-router.post('/uploadimg', uploadFile('server/assets/resume-img').any(), ( req, res ) => {
-    const resumeImg = req.files[0]
-    
-    res.json({code:0, msg: '插入图片上传成功', data: resumeImg.path})
+router.post(
+    '/uploadimg',
+     uploadFile('server/assets/resume-img').any(), 
+    ( req, res ) => {
+        const resumeImg = req.files[0]
+        
+        res.json({code:0, msg: '插入图片上传成功', data: resumeImg.path})
     
 })
 
@@ -101,7 +105,8 @@ router.post(
     (req,res) => {
         const {likeResumeID, userID, likeDate} = req.body
         
-        ResumeModel.findOne({_id: likeResumeID})
+        ResumeModel
+        .findOne({_id: likeResumeID})
         .exec((err, resume) => {
             if (resume) {
                 let arr = []
@@ -126,4 +131,47 @@ router.post(
         })
     }
 )
+
+router.get('/mylike', (req, res) => {
+    const { userID } = req.query
+    console.log('mylike', userID)
+    ResumeModel
+    .find({'likeNum.userID': userID})
+    .populate('authorID')
+    .exec( (err, resumes) => {
+        if( resumes ) {
+            res.json({code: 0, data: resumes})
+        }
+    })
+})
+
+router.post('/modifyresume',OAuth,JWT_auth, (req, res, next) => {
+
+    const { resumeID, newMDContent, modifyTime } = req.body
+    const username = req.username
+    const userID = req.userID
+
+    ResumeModel
+    .findOne({_id: resumeID})
+    .exec( (err, resume) => {
+        if(resume) {
+
+            if(resume.authorID !== userID) { // 想修改简历的人不是作者本人，应当阻止
+                console.log('修改者不是本人')
+                return res.status(401).end()
+            }
+
+            resume.mdContent = newMDContent
+            resume.lastModify = modifyTime
+
+            resume.save( (err) => {
+                if(!err) {
+                    res.json({code: 0, msg: '简历修改成功'})
+                }
+            })
+        }
+    })
+})
+
+
 module.exports = router

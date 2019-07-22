@@ -3,6 +3,8 @@ const axios = require('axios')
 
 const OAuth=async (req,res,next)=>{
     let OAuth_token = req.headers["authorization"]
+    let userID = req.body.userID
+
     console.log('OAuth 中间件拿到cookie中的token：',OAuth_token)
     if(OAuth_token) {
         let github_API_userInfo
@@ -13,6 +15,8 @@ const OAuth=async (req,res,next)=>{
             console.log('OAuth 验证成功')
             let username = github_API_userInfo.data.name
             req.username = username
+            req.userID = userID // 用以后面查询到简历时比较简历的作者和当前欲修改简历的用户ID
+            
             next()
         } catch (err) {
             console.log('走JWT')

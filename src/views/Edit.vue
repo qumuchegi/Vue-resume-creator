@@ -1,5 +1,9 @@
 <template>
     <div id="editor">
+      <div id="modify-header" v-if="modifyResumeID">
+        <h2>修改简历</h2>
+        <i class="fas fa-cogs"></i>
+      </div>
       <div v-if="insertedImage" id="upload-image-dialog">
         <img :src="insertedImageBase64" id="inserted-image"/>
         <div>
@@ -68,10 +72,10 @@
           <Poptip  v-for="iconclass in icons" trigger="hover" :content="`<i class='${iconclass}'></i>`" placement='bottom'>
             <i :class="iconclass"></i>
           </Poptip>
-          <soan style="color:rgb(218, 67, 50);margin:10px">
+          <span style="color:rgb(218, 67, 50);margin:10px">
             拷贝图标下面的&lt;i&gt;&lt;/i&gt;元素到编辑区即可插入相应图标
             <a href="https://fontawesome.com/icons" target="_blank">更多图标</a>
-        </soan>
+        </span>
         </div>
       </div>
       <div class="split" ref="split">
@@ -106,14 +110,14 @@
           <div>正在下载中</div>
         </div>
         <div class="botton" v-if="!uploadSuccess">
-          <img src="../assets/upload.png" @click="uploadResume"/>
-        <div>保存到云端</div>
+          <img src="../assets/upload.png" @click="commitResume"/>
+        <div>{{ modifyResumeID ? '提交修改':'保存到云端'}}</div>
         </div>
         <div class="botton" v-if="uploadSuccess">
           <img src="../assets/success.png">
           <div>上传已完成</div>
         </div>
-        <div class="botton" v-if="!shareSuccess">
+        <div class="botton" v-if="!shareSuccess && !modifyResumeID">
           <img src='../assets/share.png' @click="shareResume"/>
           <div>分享</div>
         </div>
@@ -131,6 +135,7 @@
 </template>
 <script>
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 
 import MarkdownIt from 'markdown-it'
 let md = new MarkdownIt().set({ html: true, breaks: true })
@@ -144,10 +149,20 @@ import mdplaceholder from '@/assets/md'
 export default {
     name: 'edit',
     created () {
-        console.log(this.mdplaceholder)
+        
+        let modify_params = this.$route.params
+         
+        this.modifyResumeID = modify_params.resumeID
+        console.log(this.modifyResumeID);
+        if(this.modifyResumeID) {
+            this.markdown_source =  this.$store.getters.get_willModify_mdContent 
+
+            console.log( '待修改：', this.markdown_source )
+        }
     },
     data () {
         return {
+            modifyResumeID: '',
             mdplaceholder: mdplaceholder,
             markdown_source: mdplaceholder.str,
             tColor:'rgba(69, 175, 20,.7)',
@@ -188,6 +203,7 @@ export default {
             
         }
     },
+   
     computed: {
         classHiddenTableControl () {
             return {
@@ -212,7 +228,11 @@ export default {
 
         htmlFromMd () {
             return md.render(this.markdown_source)
-        }
+        },
+
+        ...mapGetters([
+            'get_willModify_mdContent'
+        ])
     },
      
     methods: {
@@ -343,15 +363,51 @@ export default {
             if (!this.markdown_source) return alert('请编辑简历')
         },
 
+        commitResume () {
+            this.modifyResumeID ? this.modify() : this.uploadResume(false)
+        },
+
+        async modify () {
+            let modifyTime = this.getNow()
+            let token = cookie.getItem('auth_token')
+            let userID = cookie.getItem('userID').replace('j:\"','').replace('\"','')
+
+            console.log('修改')
+            let res = await api(
+                'post', 
+                '/resume/modifyresume', 
+                {
+                    resumeID: this.modifyResumeID, 
+                    newMDContent: this.markdown_source, 
+                    modifyTime,
+                    userID 
+                    // 当 token 不是 JWT 而是 github 签发的时候（JWT token 中有 userID），
+                    //在参数中添加 userID 用以后端和 简历作者的 ID 比较，防止不是作者修改简历
+                },
+                {headers:{'authorization': token}})
+
+            if( res.code === 0) {
+                alert(res.msg)
+            }else{
+                alert('修改错误')
+            }
+        },
+
+        getNow () {
+            let  now = new Date()
+            now = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} `
+
+            return now
+        },
+        
         async uploadResume ( pub ) {
             pub = pub | false
             if (!this.markdown_source) return alert('请编辑简历')
             if (!cookie.getItem( 'userID' )) return alert('请先登录')
 
             this.isUploadResume = true
-            let  now = new Date()
-            now = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} `
-            let mdContent = this.markdown_source, authorID = cookie.getItem('userID'), resumeCreatedTime = now
+            
+            let mdContent = this.markdown_source, authorID = cookie.getItem('userID'), resumeCreatedTime = this.getNow()
 
             console.log({mdContent, authorID, resumeCreatedTime})
 
@@ -375,7 +431,7 @@ export default {
                 },1200)
             } else if (res.code === 1) {
                 this.isUploadResume = false
-                alert(res.msg)
+                alert(`${res.msg}, 修改之后才可上传`)
             }
             
         },
@@ -447,6 +503,15 @@ export default {
 </script>
 
 <style scoped>
+#modify-header{
+    height:10%;
+    padding:20px;
+    border-bottom: solid 1.2px #888;
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    color:rgb(69, 175, 20);
+}
 #upload-image-dialog{
     position: absolute;
     z-index: 100;
@@ -566,21 +631,22 @@ input#color-picker,input#insert-image{
 .hide-insert-icon-container{
     transform: translateY(-390%);
     z-index: -34;
-    transition: transform .5s , z-index 1s
+    transition: transform .5s , z-index .1s
 }
 .hide-insert-icon-container .fa-2x{
-    color:rgb(69, 175, 20);
+    color:rgb(20, 175, 167);
+    margin:8px;
 }
 .show-insert-icon-container{
     transform: translateY( 0 );
-    z-index: 0;
-    transition: transform 1s, z-index 1s;
+    z-index: 10000000;
+    transition: transform 1s, z-index .1s;
     background-color: white;
     display: flex;
     justify-content: flex-start;
 }
 .show-insert-icon-container .fa-2x{
-    color:rgb(69, 175, 20);
+    color:rgb(20, 175, 167);
     margin:8px;
 }
 #table-row,#table-col{

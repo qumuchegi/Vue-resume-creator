@@ -100,7 +100,7 @@ router.post( // 使用注册的密码登录
                 if (user.password === password) {
                     console.log(user)
                     let JWT_token = JWT.sign(
-                        {username: user.name, exp:Date.now() + 1000 * 60},// payload
+                        {username: user.name, userid: user._id, exp:Date.now() + 1000 * 60},// payload
                         secret,
                         { algorithm }
                     )

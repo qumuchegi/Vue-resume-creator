@@ -100,6 +100,7 @@ export default {
         },
 
         onChangePage(num) {
+            this.likeResumeID = []
             console.log(num)
             this.pageNum = num
             this.getAllResumes()

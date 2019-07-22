@@ -19,6 +19,8 @@ const JWT_auth = (req, res, next) => {
             } else {
                 console.log(decoded)
                 req.username = decoded.username // 在 req 上添加 username,以便于传到下一个中间件取出 username 来查询数据库
+                req.userID = decoded.userid // 用以后面查询到简历时比较简历的作者和当前欲修改简历的用户ID
+
                 next()
             }
         })

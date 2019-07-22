@@ -44,6 +44,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/modify/:resumeID',
+      name: 'modify',
+      component: Edit
     }
   ]
 })

@@ -6,7 +6,7 @@ const baseUrl = 'http://localhost:3001'
  
 function resHandler (res) {
     const {status, data} = res
-    
+    console.log('api res:', {status, data})
     return data
 }
 export const api = async (method, route, data, config={}) => {
