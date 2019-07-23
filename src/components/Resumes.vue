@@ -8,7 +8,7 @@
       <div v-html="md2html(resume.mdContent)" class='content'></div>
       <div class="sample-info"> 
         <div class="author-avatar">
-          <img :src="resume.authorID.avatarSrc"/>
+          <img :src=" resume.authorID.avatarSrc.match(/https:\/\//) ? resume.authorID.avatarSrc : 'http://localhost:3001/'+resume.authorID.avatarSrc.replace('server/assets/user-avatar/','')"/>
         </div>
         <div class='pub-time'>
           <span class="key">发布</span>

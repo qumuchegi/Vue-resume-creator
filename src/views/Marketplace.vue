@@ -12,7 +12,7 @@
       <div class="info">
         <div>
           <div class='author-info'>
-            <img :src="resume.authorID.avatarSrc"/>
+            <img :src="resume.authorID.avatarSrc.match(/https:\/\//) ? resume.authorID.avatarSrc : 'http://localhost:3001/'+resume.authorID.avatarSrc.replace('server/assets/user-avatar/','')"/>
             <div class='value'>{{resume.authorID.name}}</div>
             <div class="user-opertions">
               <span @click="viewMD(resume._id)" v-if="viewMDID !== resume._id">看markdown原文</span>
