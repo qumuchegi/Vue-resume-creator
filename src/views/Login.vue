@@ -58,7 +58,7 @@ export default {
                 console.log(res.msg)
                 cookie.setItem('auth_token', res.user.JWT_token)
                 cookie.setItem('userID', res.user._id.replace('j:\"','').replace('\"',''))
-                cookie.setItem('userAvatar', 'http://localhost:3001/' + res.user.avatarSrc.replace('server/assets/user-avatar/', ''))
+                cookie.setItem('userAvatar', 'http://115.220.10.182:80/' + res.user.avatarSrc.replace('assets/user-avatar/', ''))
                 cookie.setItem('username', res.user.name)
                 this.$router.push('/')
             }

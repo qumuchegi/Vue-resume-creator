@@ -8,15 +8,28 @@
         <img :src="insertedImageBase64" id="inserted-image"/>
         <div>
           <Progress :percent="100*uploadImgProgress">
-                <Icon type="checkmark-circled"></Icon>
-                <span v-if="uploadImgProgress===1">
-                    成功
-                </span>
+            <Icon type="checkmark-circled"></Icon>
+            <span v-if="uploadImgProgress===1">
+                成功
+            </span>
           </Progress>
         </div>
         <div id="bottons-container">
-            <Button type="primary" @click="uploadImg">确定上传</Button>
-            <Button type="default" @click="cancleInsertImg">取消</Button>
+          <Button type="primary" @click="uploadImg">确定上传</Button>
+          <Button type="default" @click="cancleInsertImg">取消</Button>
+        </div>
+      </div>
+      <div id="download-preview" v-if="downloadType">
+        <div id="preview-shrink" v-html="htmlFromMd">
+        </div>
+        <div id="user-download-control">
+          <div>
+              <h2><span>下载类型：</span>
+                {{downloadType==='img' ? '图片':'PDF'}}
+              </h2>
+          </div>
+          <Button @click="download" type="primary" class="botton">确定下载</Button>
+          <Button @click="downloadType=''" type="default" class="botton">取消</Button>
         </div>
       </div>
       <div id='control'>
@@ -94,7 +107,7 @@
       </div>
       <div id="get-resume">
         <div class="botton"  v-if="!isLoadingResumeToImg">
-          <img src='../assets/image.png' @click="downloadImg"/>
+          <img src='../assets/image.png' @click="preDownload('img')"/>
           <div>下载图片</div>
         </div>
         <div class="botton" v-if="isLoadingResumeToImg">
@@ -102,7 +115,7 @@
           <div>正在下载中</div>
         </div>
         <div class='botton' v-if="!isLoadingResumeToPDF">
-          <img src='../assets/pdf.png' @click="downloadPDF"/>
+          <img src='../assets/pdf.png' @click="preDownload('pdf')"/>
           <div>下载PDF</div>
         </div>
         <div class="botton" v-if="isLoadingResumeToPDF">
@@ -126,8 +139,7 @@
           <div>分享已成功</div>
         </div>
         <div id="test">
-            下载图片和PDF的功能存在bug，正在开发中，建议不要使用（如果简历长度超过可见区域）,
-            不过您可以使用截长图来获取简历截图，如有需要还可以使用<a href="http://islide.foxitreader.cn/jpg-to-pdf" target='_blank'>在线图片转pdf</a>
+            如果您不满意下载图片和PDF的功能，可以使用截长图软件，还可以使用<a href="http://islide.foxitreader.cn/jpg-to-pdf" target='_blank'>在线图片转pdf</a>
             将截图转换为pdf
         </div>
       </div>
@@ -181,6 +193,7 @@ export default {
             uploadImgProgress: 0,
             inserted_img_server_path:'',
             willInsertIcon: false,
+            downloadType: '',
             icons: [
                  'fas fa-heart fa-2x',
                  'fas fa-address-book fa-2x',
@@ -314,6 +327,15 @@ export default {
             this.isHiddenTableSizeControl = !this.isHiddenTableSizeControl
         },
 
+        preDownload (type) {
+            this.downloadType = type
+        },
+
+        download () {
+            if (this.downloadType === 'img') { this.downloadImg() }
+            if (this.downloadType === 'pdf') { this.downloadPDF() }
+        },
+
         downloadImg () {
             if (!this.markdown_source) return alert('请编辑简历')
 
@@ -321,27 +343,28 @@ export default {
             let _this = this
              
             html2Canvas(
-                    document.getElementById('preview')
-                ).then( canvas => {
-                     canvas.toBlob(img => {
-                        console.log(img)
+              document.getElementById('preview-shrink')
+            ).then( canvas => {
+              canvas.toBlob(img => {
+                console.log(img)
                          
-                        let reader = new FileReader()
-                        reader.readAsDataURL(img)
+                let reader = new FileReader()
+                reader.readAsDataURL(img)
                         
-                        reader.onload = function () {// 使用 a 标签下载生成的图片
-                            var a = document.createElement("a");
-                            a.href = this.result;
-                            a.download = 'reusme-img';
-                            a.click();
+                reader.onload = function () {// 使用 a 标签下载生成的图片
+                  var a = document.createElement("a");
+                  a.href = this.result;
+                  a.download = 'reusme-img';
+                  a.click();
 
-                            _this.isLoadingResumeToImg = false
-                        }
+                  _this.isLoadingResumeToImg = false
+                  this.downloadType=''
+                }
 
-                     })
-                }, err => {
+              })
+            }, err => {
                     console.log(err)
-                })
+            })
         },
 
         downloadPDF () {
@@ -349,13 +372,14 @@ export default {
 
             this.isLoadingResumeToPDF = true
 
-            html2pdf( document.getElementById('preview'), {
+            html2pdf( document.getElementById('preview-shrink'), {
                 filename: 'resume.pdf',
                 margin: 40,
-                smart: true // true: Smartly adjust content width
+                //smart: true // true: Smartly adjust content width
             }, () => 
             { 
                 this.isLoadingResumeToPDF = false
+                this.downloadType=''
             })
         },
 
@@ -476,8 +500,8 @@ export default {
                 setTimeout(()=>{
                     //this.insertedImageBase64 = null
                     this.insertedImage = null
-                    this.inserted_img_server_path = res.data.replace('server/assets/resume-img/','')
-                    this.inserted_img_server_path = `<img src="http://localhost:3001/${this.inserted_img_server_path}" width="200px"/>`
+                    this.inserted_img_server_path = res.data.replace('assets/resume-img/','')
+                    this.inserted_img_server_path = `<img src="http://115.220.10.182:80/${this.inserted_img_server_path}" width="100px"/>`
                     
                     this.copyImgWillInstered()
                     
@@ -522,11 +546,26 @@ export default {
     background-color: rgba(1,1,1,0.3);
     
 }
+#download-preview{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: absolute;
+    background-color: white;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    top:0px;
+    left:0px;
+    background-color: rgba(1,1,1,.6);
+}
 #upload-image-dialog img{
     display: block;
     width:300px;
     margin:  auto;
     margin-top: 100px;
+    top:0px;
+    left:0px;
 }
 #upload-image-dialog #bottons-container{
     width: 300px;
@@ -534,6 +573,27 @@ export default {
     margin-top: 100px;
     display: flex;
     justify-content: space-around;
+}
+#preview-shrink{
+    width:704.6px;
+    padding: 20px;
+    font-size: 70%;
+    transform-origin: 0 0;
+    transform: translate(0) scale(0.7);
+    /*transform: translate(0);*/
+    background-color: white;
+}
+#user-download-control{
+    background-color: rgba(129, 224, 85, 1);
+    border-radius: 10px;
+    margin: 100px 20px;
+    padding: 100px;
+}
+#user-download-control h2{
+    color:white
+}
+#user-download-control .botton{
+    margin-right:20px
 }
 #editor{
     background-color: white;

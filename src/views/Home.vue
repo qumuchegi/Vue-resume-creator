@@ -29,7 +29,6 @@
             </DropdownMenu>
           </Dropdown>
           <div id='username'>{{username}}</div>
-          
         </div>
         <div v-else id='links'>
           <router-link to="/register">
@@ -57,6 +56,11 @@
                 编辑简历
               </MenuItem>
           </Menu>
+          <div id='dev-info'>
+            <h2>开发者信息</h2>
+            <a href="https://github.com/qumuchegi">GitHub</a>
+            <a href="https://qumuchegi.github.io/">个人主页</a>
+          </div>
         </Sider>
         <Content :class="{contentLargest: isCollapsed,contentSmall: !isCollapsed}">
           <router-view></router-view>
@@ -244,5 +248,12 @@ export default {
 }
 .menu-icon{
   width:20px
+}
+#dev-info{
+  border-top:solid 1px #aaa;
+  margin:10px;
+}
+#dev-info a{
+  display: block;
 }
 </style>

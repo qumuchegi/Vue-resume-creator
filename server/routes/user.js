@@ -69,7 +69,7 @@ router.get( // 使用 github 账号登录（不用注册）
                 res.cookie('userAvatar',user.avatarSrc)
                 res.cookie('username', user.name)
                 //'已经使用过GitHub账号登录过'
-                res.redirect(301,'http://localhost:8080')
+                res.redirect(301,'http://115.220.10.182:80') // http://localhost:8080
             } else 
             new UserModel({
                 id: mongoose.Types.ObjectId(),
@@ -82,7 +82,7 @@ router.get( // 使用 github 账号登录（不用注册）
                     res.cookie('userAvatar',user.avatarSrc)
                     res.cookie('username', user.name)
                 
-                    res.redirect(301,'http://localhost:8080') // 从GitHub的登录跳转回我们的客户端页面
+                    res.redirect(301,'http://115.220.10.182:80') // 从GitHub的登录跳转回我们的客户端页面
                 }
             })
         })

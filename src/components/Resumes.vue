@@ -1,14 +1,17 @@
 <template>
   <div id="my-resumes-body">
-    <div v-if="Resumes.length===0" id='no-my-resumes'>
+    <div v-if="!loadingMyLikeResumes && !loadingMyResumes && Resumes.length===0" id='no-my-resumes'>
         <img src="../assets/sad-4.png"/>
         <div>没有数据</div>
+    </div>
+    <div v-if="loadingMyLikeResumes || loadingMyResumes" id='loading'>
+      <img src="../assets/loading.png"/>
     </div>
     <div class="my-resume-item" v-for="resume in Resumes" :key="resume._id">
       <div v-html="md2html(resume.mdContent)" class='content'></div>
       <div class="sample-info"> 
         <div class="author-avatar">
-          <img :src=" resume.authorID.avatarSrc.match(/https:\/\//) ? resume.authorID.avatarSrc : 'http://localhost:3001/'+resume.authorID.avatarSrc.replace('server/assets/user-avatar/','')"/>
+          <img :src=" resume.authorID.avatarSrc.match(/https:\/\//) ? resume.authorID.avatarSrc : 'http://115.220.10.182:80/'+resume.authorID.avatarSrc.replace('assets/user-avatar/','')"/>
         </div>
         <div class='pub-time'>
           <span class="key">发布</span>
@@ -43,6 +46,8 @@ export default {
 
     props:{
         Resumes: Array,
+        loadingMyLikeResumes: Boolean,
+        loadingMyResumes: Boolean
     },
 
     data () {
@@ -74,6 +79,19 @@ export default {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+}
+@keyframes rotateLoading {
+    from{transform: rotate(0)}
+    to{transform: rotate(360deg)}
+}
+#loading{
+   width:100%;
+}
+#loading img{
+    display: block;
+    animation: rotateLoading 2s infinite;
+    width:100px;
+    margin: auto;
 }
 #no-my-resumes{
     width:300px;

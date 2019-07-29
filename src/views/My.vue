@@ -12,10 +12,10 @@
     <div id="content">
       <Tabs type="card" value='1' @on-click="onChangeTab">
         <TabPane label='我的简历' name='1'>
-          <Resume :Resumes="myresumes"/>
+          <Resume :Resumes="myresumes" :loadingMyResumes="loadingMyResumes"/>
         </TabPane>
         <TabPane label="我喜欢的简历" anme='2'>
-          <Resume :resumes="myLikeResumes"/>
+          <Resume :resumes="myLikeResumes" :loadingMyLikeResumes="loadingMyLikeResumes"/>
         </TabPane>
       </Tabs>
     </div>
@@ -40,6 +40,8 @@ export default {
             myAvatar: cookie.getItem('userAvatar'),
             myresumes: [],
             myLikeResumes: [],
+            loadingMyResumes: true,
+            loadingMyLikeResumes: true
 
         }
     },
@@ -57,7 +59,7 @@ export default {
 
             if(res.code === 0) {
                 console.log(res)
-
+                this.loadingMyResumes = false
                 this.myresumes = res.data
             }
         },
@@ -68,12 +70,13 @@ export default {
             let res = await api('get', '/resume/mylike', {userID})
 
             if (res.code === 0) {
-                this.myLikeResumes = res.data
+              this.loadingMyLikeResumes = false
+              this.myLikeResumes = res.data
             }
         },
 
         onChangeTab (tabName) {
-
+          
         }
     },
 }

@@ -4,11 +4,10 @@ const md = {
 <tr>
 <td>
 
-## 曲木车格 / chegi 
+## chegi 
 #### 前端工程师 / Web front-end developer
 </td>
 <td>
-<img src="http://localhost:3001/1563691777602fullsizeoutput_1f3.jpeg" style="width:50px;border-radius:50px;height:50px"/>
 </td>
 </tr>
 </table>
@@ -91,22 +90,6 @@ const md = {
 <tr>
     <td><i class="far fa-flag"></i></td>
     <td>web 博客系统，实现用户注册/登录、博客发布、评论、管理等功能，使用 React + Express + Redux + React Router + MongoDB 开发. </td>
-</tr>
-</table>
-
-<table id="tec">
-<capital><h5><i class="fas fa-list"></i> 社区影响 </h5></capital>
-<tr>
-    <td><i class="far fa-flag"></i></td>
-    <td>在掘金等平台发布个人技术文章，其中有一篇个人获赞最高(150+ 赞)的文章是关于 JWT、OAuth2.0、Session 用户授权项目实战的.</td>
-</tr>
-</table>
-
-<table id="tec">
-<capital><h5><i class="fas fa-list"></i> 实习经历 </h5></capital>
-<tr>
-    <td><i class="far fa-flag"></i></td>
-    <td>大三暑假在南京育儿网做前端实习，Vue 方向.</td>
 </tr>
 </table>
 

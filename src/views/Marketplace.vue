@@ -1,7 +1,14 @@
 <template>
- <div>
-  <div id='market-body'>
-    <div v-for="resume in resumes" :key='resume.id' class="resume-item">
+ <div id='market-body'>
+  <div >
+    <div v-if="loadingAllResumes" id="loading">
+      <img src="../assets/loading.png"/>
+    </div>
+    <div 
+      v-for="resume in resumes" 
+      :key='resume.id' 
+      v-if='!loadingAllResumes'
+      class="resume-item">
       <div class='image-resume' >
         <div class='content' v-html="md2html(resume.mdContent)" v-if="viewMDID !== resume._id"></div>
         <!--<img :src="getResumeImageDataURL(resume.id)"/>-->
@@ -12,7 +19,7 @@
       <div class="info">
         <div>
           <div class='author-info'>
-            <img :src="resume.authorID.avatarSrc.match(/https:\/\//) ? resume.authorID.avatarSrc : 'http://localhost:3001/'+resume.authorID.avatarSrc.replace('server/assets/user-avatar/','')"/>
+            <img :src="resume.authorID.avatarSrc.match(/https:\/\//) ? resume.authorID.avatarSrc : 'http://115.220.10.182:80/'+resume.authorID.avatarSrc.replace('assets/user-avatar/','')"/>
             <div class='value'>{{resume.authorID.name}}</div>
             <div class="user-opertions">
               <span @click="viewMD(resume._id)" v-if="viewMDID !== resume._id">看markdown原文</span>
@@ -29,10 +36,9 @@
         </div>
       </div>
     </div> 
-     
   </div>
-  <div id='page-control'>
-    <Page :total="totalNum"  page-size="pageSize" show-elevator show-total @on-change="onChangePage"/>
+  <div id='page-control'  v-if='!loadingAllResumes'>
+    <Page :total="totalNum"  page-size="pageSize"  show-total @on-change="onChangePage"/>
   </div>  
  </div>
 </template>
@@ -55,7 +61,8 @@ export default {
             pageSize: 3,
             selectedResumeContent: '',
             likeResumeID: [],
-            viewMDID: ''
+            viewMDID: '',
+            loadingAllResumes: true, // 正在加载简历，显示 loading 图
         }
     },
     
@@ -71,9 +78,11 @@ export default {
     },
     methods: {
         async getAllResumes () {
+
             let res = await api('get', '/resume', {pageNum: this.pageNum, pageSize: this.pageSize})
 
             if (res.code === 0) {
+                this.loadingAllResumes = false
                 console.log(res.data.resumes)
                 this.totalNum = res.data.totalNum 
                 this.resumes = res.data.resumes
@@ -139,9 +148,25 @@ export default {
 
 <style scoped>
 #market-body{
+    width:100%;
+}
+#market-body>div{
     display: flex;
     justify-content: flex-start;
-
+}
+@keyframes rotateLoading {
+    from{transform: rotate(0)}
+    to{transform: rotate(360deg)}
+}
+#loading{
+   width:100%;
+   background-color: white
+}
+#loading img{
+    display: block;
+    animation: rotateLoading 2s infinite;
+    width:100px;
+    margin: auto;
 }
 .resume-item{
     width:390px;
