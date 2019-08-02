@@ -147,6 +147,7 @@ export default {
 </script>
 
 <style scoped>
+
 #market-body{
     width:100%;
 }
@@ -213,7 +214,9 @@ export default {
 #page-control{
     margin:10px;
     background-color: white;
-    padding: 3px;
+    height:10vh;
+    padding: 10px;
+    box-shadow: 8px 8px 10px #aaa;
 }
 .user-opertions{
     margin:0 30px;

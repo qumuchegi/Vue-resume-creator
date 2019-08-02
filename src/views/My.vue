@@ -10,7 +10,7 @@
       </div>
     </div>
     <div id="content">
-      <Tabs type="card" value='1' @on-click="onChangeTab">
+      <Tabs type="card" value='1' @on-click="onChangeTab" :animated="false">
         <TabPane label='我的简历' name='1'>
           <Resume :Resumes="myresumes" :loadingMyResumes="loadingMyResumes"/>
         </TabPane>
@@ -104,7 +104,8 @@ export default {
     color:rgb(69, 175, 20) ;
 }
 #content{
-    margin: 10px 20px;
+    margin: 0px 20px;
+
 }
 #my-resumes{
     

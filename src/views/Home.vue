@@ -1,5 +1,9 @@
 <template>
   <Layout class="home">
+      <div id="mobile-hide">
+          <h1>Resume creator</h1>
+          <h2>移动平台不方便简历的制作，请移到桌面查看</h2>
+      </div>
     <Header class="home-header">
       <div>
         <h2>Resume Creator</h2>
@@ -56,7 +60,7 @@
                 编辑简历
               </MenuItem>
           </Menu>
-          <div id='dev-info'>
+          <div id='dev-info' :class="isCollapsed ? 'dev-info-hide':'dev-info-show'">
             <h2>开发者信息</h2>
             <a href="https://github.com/qumuchegi">GitHub</a>
             <a href="https://qumuchegi.github.io/">个人主页</a>
@@ -153,12 +157,29 @@ export default {
 </script>
 
 <style scoped>
+@media screen and (max-width:700px) {
+  #mobile-hide{
+      width:100vw;
+      height:100vh;
+      position: absolute;
+      z-index: 10000;
+      background-color: white;
+  }
+  #mobile-hide h1,h2{
+    text-align: center;
+  }
+}
+@media screen and (min-width:700px){
+  #mobile-hide{
+    display: none
+  }
+}
 .home-header{
   display: flex;
   justify-content: space-between;
   background-color: white;
   color:rgb(173, 236, 144);
-  height: 10%;
+  height:8vh;
   background-color: white;
   margin:0;
   color:black;
@@ -200,7 +221,7 @@ export default {
    height: 100%;
    width:200px;
    background-color: white;
-   border-right: solid 1px #bbb;
+   box-shadow: 5px 10px 10px #888
 }
 #menu{
   height: 100px;
@@ -217,6 +238,7 @@ export default {
 .contentSmall{
   margin-left: 200px;
   transition: transform 2s;
+  height: 92vh;
 }
 .contentLargest{
   margin-left: 0px;
@@ -250,10 +272,21 @@ export default {
   width:20px
 }
 #dev-info{
-  border-top:solid 1px #aaa;
-  margin:10px;
+  
+  position: absolute;
+  bottom: 0rem;
+  
+  padding:0.5rem;
+  width:100%;
+  height: 10rem;
 }
 #dev-info a{
   display: block;
+}
+.dev-info-hide{
+  display: none
+}
+.dev-info-show{
+  display: block
 }
 </style>

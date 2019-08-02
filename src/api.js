@@ -2,7 +2,7 @@
 import axios from 'axios'
 import qs from 'querystring'
 
-const baseUrl = 'http://115.220.10.182:80' // 'http://localhost:3001'
+const baseUrl = 'http://115.220.10.182:80' // 'http://localhost:3001' //  // 
  
 function resHandler (res) {
     const {status, data} = res

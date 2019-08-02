@@ -527,6 +527,10 @@ export default {
 </script>
 
 <style scoped>
+#editor{
+    height:92vh;
+    margin-left: 5px;
+}
 #modify-header{
     height:10%;
     padding:20px;

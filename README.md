@@ -53,7 +53,7 @@ app.get('/', (req,res) =>
 
 5. 测试：浏览器请求 XXXX.XXXX.XX.XX （服务器地址）即可访问到 打好包的 vue 项目的 index.html.
 
-6. 保持后端 node 代码运行，而不会因为关掉启动服务的命令行界面二是服务关停，可以全局安装 `pm2`： `npm i -g pm2`,然后 使用 pm2 代替 node 运行服务即可。可能会遇到 找不到 pm2 的报错，此时可以运行 `ln -s [pm2安装地址] [/usr/bin/pm2]`，比如 `ln -s ~/node-v9.3.0-linux-x64/bin/pm2 /usr/bin/pm2`
+6. 保持后端 node 代码运行，而不会因为关掉启动服务的命令行界面二是服务关停，可以全局安装 `pm2`： `npm i -g pm2`,然后 使用 pm2 代替 node 运行服务即可。可能会遇到 找不到 pm2 的报错，此时可以运行 `ln -s [pm2安装地址] [/usr/bin/pm2]`，比如 `ln -s ~/node-v9.3.0-linux-x64/bin/pm2 /usr/bin/pm2`. 
 
 
 

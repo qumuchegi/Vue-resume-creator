@@ -75,7 +75,7 @@ export default {
 
 <style scoped>
 #my-resumes-body{
-    
+    background-color: aliceblue;
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
@@ -109,7 +109,7 @@ export default {
     
 }
 .my-resume-item .content{
-    background-color: rgb(245, 242, 239);
+    background-color: white;
     border:solid 1px #bbb;
     width:600px;
     margin: auto;
